@@ -12,7 +12,8 @@ q_low <- 0.1
 q_high <- 1
 
 # evaluations of buyer and seller
-# IMPORTANT: buyer must be lower than seller
+# IMPORTANT: buyer must be lower than seller, otherwise it is
+#   not rational to trade.
 v_buyer <- 0.5
 v_seller <- 0.4
 
@@ -44,11 +45,53 @@ post_processing <- function(sim_data) {
   return(result)
 }
 
-# 
+# simulation data
+sim_unif <- runif(n, q_low, q_high)
+
+# some of the destributions support R, in these cases, the lower and upper border
+# do not bind
+sim_norm <- rnorm(n, 0.5, 1)
+sim_log_norm <- rlnorm(n)
+sim_gamma <- rgamma(n,1)
+
+# filtering with threshhold
+threshhold <- 0.2
+
+sim_norm <- sim_norm[sim_norm >= threshhold]
+sim_gamma <- sim_norm[sim_norm >= threshhold]
+sim_log_norm <- sim_norm[sim_norm >= threshhold]
+
+# applying post_processing
+sim_data_norm <- post_processing(sim_norm)
+sim_data_unif <- post_processing(sim_unif)
+sim_data_log_norm <- post_processing(sim_log_norm)
+sim_data_gamma <- post_processing(sim_gamma)
+
 ## plotting ###########################
 
-sim_data %>% ggplot(aes(x = x,
+sim_data_unif %>% ggplot(aes(x = x,
                         y = y,
                         group = line_category,
                         color = line_category)) +
   geom_line()
+
+sim_data_norm %>% ggplot(aes(x = x,
+                             y = y,
+                             group = line_category,
+                             color = line_category)) +
+  geom_line()
+
+sim_data_log_norm %>% ggplot(aes(x = x,
+                             y = y,
+                             group = line_category,
+                             color = line_category)) +
+  geom_line()
+
+sim_data_gamma %>% ggplot(aes(x = x,
+                             y = y,
+                             group = line_category,
+                             color = line_category)) +
+  geom_line()
+
+
+

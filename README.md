@@ -4,4 +4,4 @@ This repository contains some simulations for game-theory-models containing stat
 
 ## Results
 
-### lemon problem
+### Lemon problem
